@@ -1,7 +1,14 @@
 import mediapipe as mp
 import cv2
 import mouse
-from autopy import screen
+try:
+    from autopy import screen
+except:
+    pass
+try:
+    from win32api import GetSystemMetrics
+except:
+    pass
 
 class handDetector():
     def __init__(self, mode=False, maxHands = 2, confidence= 0.5):
@@ -25,7 +32,14 @@ class handDetector():
 
         self.prev_middel_x = None
         self.prev_middel_y = None
-        self.width, self.height = screen.size()
+        try:
+            self.width, self.height = screen.size()
+        except:
+            pass
+        try:
+            self.width, self.height = GetSystemMetrics(0),GetSystemMetrics(1)
+        except:
+            pass
         self.clicked = False
 
     def webCam(self):
