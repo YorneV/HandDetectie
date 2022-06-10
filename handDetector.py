@@ -103,7 +103,7 @@ class handDetector():
                 self.cap.release
 
     def mousecontrol(self):
-        threshold = 2.1/100 #it's in percentages
+        threshold = 2.15/100 #it's in percentages
         thresholdclick = 20
         try:
             if self.movement > threshold: #if distance is less then threshold then probably noise
@@ -124,4 +124,4 @@ class handDetector():
 
 
 if __name__ == '__main__':
-    handDetector(maxHands=2, mode=False, confidence=0.7).fingerControl()
+    handDetector(maxHands=2, mode=False, confidence=0.8).fingerControl()
