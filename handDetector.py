@@ -80,7 +80,7 @@ class handDetector():
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             image = cv2.flip(image, 1)
             results = self.hands.process(image)  # process de frame
-            print(image.shape)
+            #print(image.shape)
 
             if results.multi_hand_landmarks:
                 self.index_x = int(results.multi_hand_landmarks[0].landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP].x*image.shape[1])
@@ -95,7 +95,7 @@ class handDetector():
                 self.distance = ((self.index_x-self.thumb_x)**2 + (self.index_y-self.thumb_y)**2 )**0.5
 
                 self.mousecontrol()
-                cv2.imshow("VideoStream", cv2.flip(image,1))
+                #cv2.imshow("VideoStream", cv2.flip(image,1))
                 if cv2.waitKey(5) & 0xFF == ord('q'):
                     break  # press q to end it
                 self.cap.release
