@@ -30,10 +30,11 @@ class handDetector():
         self.middel_y = None
         self.distance = None
 
-        self.prev_middel_x = None
-        self.prev_middel_y = None
+        self.prev_middel_x = 0
+        self.prev_middel_y = 0
         try:
             self.width, self.height = screen.size()
+            self.width, self.height = 1.5*self.width, 1.5*self.height
         except:
             pass
         try:
@@ -93,18 +94,19 @@ class handDetector():
                 self.middel_y = results.multi_hand_landmarks[0].landmark[self.mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y
 
                 self.distance = ((self.index_x-self.thumb_x)**2 + (self.index_y-self.thumb_y)**2 )**0.5
+                self.movement = ((self.middel_x-self.prev_middel_x)**2 + (self.middel_y-self.prev_middel_y)**2 )**0.5
 
                 self.mousecontrol()
-                #cv2.imshow("VideoStream", cv2.flip(image,1))
+                cv2.imshow("VideoStream", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
                 if cv2.waitKey(5) & 0xFF == ord('q'):
                     break  # press q to end it
                 self.cap.release
 
     def mousecontrol(self):
-        threshold = 1/100 #it's in percentages
+        threshold = 2.1/100 #it's in percentages
         thresholdclick = 20
         try:
-            if abs(self.prev_middel_x - self.middel_x) > threshold or abs(self.prev_middel_y - self.middel_y) > threshold: #if distance is less then threshold then probably noise
+            if self.movement > threshold: #if distance is less then threshold then probably noise
                 self.middel_x = min(max(self.middel_x*(1/0.8)-(0.1/0.8), 0), 1)
                 self.middel_y = min(max(self.middel_y*(1/0.8)-(0.1/0.8), 0), 1)
                 mouse.move(int(self.middel_x*self.width), int(self.middel_y*self.height))
