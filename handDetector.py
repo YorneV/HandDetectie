@@ -46,6 +46,7 @@ class handDetector():
         while self.cap.isOpened():
             succes, image = self.cap.read()
             if not succes:
+                print('Broken frame')
                 #broken frames need to be skipped
                 continue
             image.flags.writeable = False  # to make it quicker
@@ -93,7 +94,7 @@ class handDetector():
                 self.distance = ((self.index_x-self.thumb_x)**2 + (self.index_y-self.thumb_y)**2 )**0.5
 
                 self.mousecontrol()
-
+                cv2.imshow("VideoStream", cv2.flip(image,1))
                 if cv2.waitKey(5) & 0xFF == ord('q'):
                     break  # press q to end it
                 self.cap.release
@@ -102,14 +103,14 @@ class handDetector():
         threshold = 1/100 #it's in percentages
         thresholdclick = 20
         try:
-            if abs(self.prev_middel_x - self.middel_x) > threshold or abs(self.prev_middel_y - self.middel_y) > threshold: #if distance is less then threshold then probably ruis
+            if abs(self.prev_middel_x - self.middel_x) > threshold or abs(self.prev_middel_y - self.middel_y) > threshold: #if distance is less then threshold then probably noise
                 mouse.move(int(self.middel_x*self.width), int(self.middel_y*self.height))
                 if self.distance < thresholdclick and not self.clicked:
                     mouse.click('left')
                     print("geklikt")
                     self.clicked = True
-                if self.distance > (thresholdclick + 2) and self.clicked:
-                    self.clicked = False   
+            if self.distance > (thresholdclick + 2) and self.clicked:
+                self.clicked = False   
         except:
             pass
         self.prev_middel_x, self.prev_middel_y = self.middel_x, self.middel_y
