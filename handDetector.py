@@ -94,7 +94,7 @@ class handDetector():
                 self.middel_y = results.multi_hand_landmarks[0].landmark[self.mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y
 
                 self.distance = ((self.index_x-self.thumb_x)**2 + (self.index_y-self.thumb_y)**2 )**0.5
-                self.movement = ((self.middel_x-self.prev_middel_x)**2 + (self.middel_y-self.prev_middel_y)**2 )**0.5
+                self.movement = ((self.middel_x*image.shape[1]-self.prev_middel_x*image.shape[1])**2 + (self.middel_y*image.shape[0]-self.prev_middel_y*image.shape[0])**2 )**0.5
 
                 self.mousecontrol()
                 cv2.imshow("VideoStream", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
@@ -103,7 +103,7 @@ class handDetector():
                 self.cap.release
 
     def mousecontrol(self):
-        threshold = 2.15/100 #it's in percentages
+        threshold = 8 #amount of pixels
         thresholdclick = 20
         try:
             if self.movement > threshold: #if distance is less then threshold then probably noise
