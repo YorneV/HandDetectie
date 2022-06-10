@@ -80,6 +80,7 @@ class handDetector():
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             image = cv2.flip(image, 1)
             results = self.hands.process(image)  # process de frame
+            print(image.shape)
 
             if results.multi_hand_landmarks:
                 self.index_x = int(results.multi_hand_landmarks[0].landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP].x*image.shape[1])
@@ -104,6 +105,8 @@ class handDetector():
         thresholdclick = 20
         try:
             if abs(self.prev_middel_x - self.middel_x) > threshold or abs(self.prev_middel_y - self.middel_y) > threshold: #if distance is less then threshold then probably noise
+                self.middel_x = min(max(self.middel_x*(1/0.8)-(0.1/0.8), 0), 1)
+                self.middel_y = min(max(self.middel_y*(1/0.8)-(0.1/0.8), 0), 1)
                 mouse.move(int(self.middel_x*self.width), int(self.middel_y*self.height))
                 if self.distance < thresholdclick and not self.clicked:
                     mouse.click('left')
